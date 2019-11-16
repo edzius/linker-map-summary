@@ -88,7 +88,7 @@ with open(args.map_file) as f:
                         source = source[:source.index('.a(') + 2]
                     elif source.endswith('.o'):
                         where = max(source.rfind('\\'), source.rfind('/'))
-                        if where:
+                        if where > 0:
                             source = source[:where + 1] + '*.o'
 
                 if source not in size_by_source:
