@@ -34,6 +34,9 @@ parser.add_argument('--combine', action='store_true',
                     help="All object files in an .a archive or in a directory are combined")
 args = parser.parse_args()
 
+def percent(got, cnt):
+    return (got / cnt) * 100
+
 class SectionSize():
     code = 0
     data = 0  # Including metadata like import tables
@@ -104,5 +107,10 @@ for source in sources:
     sumcode += size.code
     sumdata += size.data
     sumtotal += size.total()
-    print("%-40s \t%7s  (code: %d data: %d)" % (os.path.normpath(source), size.total(), size.code, size.data))
+for source in sources:
+    size = size_by_source[source]
+    print("%-40s \t%7s [%.2f%%] (code: %d [%.2f%%] data: %d [%.2f%%])" % (os.path.normpath(source),
+                                                                    size.total(), percent(size.total(), sumtotal),
+                                                                    size.code, percent(size.code, sumcode),
+                                                                    size.data, percent(size.data, sumdata)))
 print("TOTAL %d  (code: %d data: %d)" % (sumtotal, sumcode, sumdata))
